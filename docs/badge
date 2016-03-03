@@ -1,0 +1,8 @@
+props:
+    content - text/component
+    
+    icon - (true/false)
+    
+    overlap - (true/false)
+    
+    value - data-badge value

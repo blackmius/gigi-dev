@@ -1,0 +1,12 @@
+props:
+    type - input type
+    
+    value - starting value
+    
+    pattern - regular exception
+    
+    label - text
+    
+    error - exception text
+    
+    floatingLabel - (true/false)

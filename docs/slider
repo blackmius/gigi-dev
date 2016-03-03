@@ -1,0 +1,11 @@
+props:
+    min - min value
+    
+    max - max value
+    
+    value - num
+    
+    tabindex - num
+
+methods:
+    setValue(value)

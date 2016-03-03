@@ -1,0 +1,6 @@
+props:
+    fields - {key: description, ... }
+    
+    data - {key: value from input, ... }
+    
+    onupdate - event that calls when input's value changes

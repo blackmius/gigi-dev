@@ -1,0 +1,6 @@
+props:
+    type - checkbox/radio/switch
+    
+    ripple - Applies ripple click effect
+    
+    content - text/component

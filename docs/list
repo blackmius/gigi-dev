@@ -1,0 +1,15 @@
+props:
+    prefixicon - icon name
+    
+    items - list(text/components)
+    
+methods:
+    push(el)
+    
+    unshift(el)
+    
+    pop() --> last el
+    
+    splice(i, w)
+    
+    remove(i)

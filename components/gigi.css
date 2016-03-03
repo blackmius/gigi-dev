@@ -1,0 +1,120 @@
+.fit {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.flexible {
+    display: flex;
+}
+
+.flex {
+    flex: 1;
+}
+
+.invisible {
+    display: none !important;
+}
+
+.visible {
+    display: block;
+}
+
+.gigi-list__item > * {
+    display: flex;
+}
+
+.gigi-navmenu__item {
+    min-height: 50px;
+}
+
+.gigi-navmenu__item > * {
+    margin: auto 20px;
+    font-size: 16px;
+    color: #717070;
+}
+
+.gigi-list {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+
+.gigi-list__item {
+    margin-bottom: 20px;
+    flex-direction: row;
+}
+
+.gigi__action--continue {
+    background-color: #5E8CD8 !important;
+    color: #fff;
+}
+
+
+.gigi-layout__header-row {
+    padding: 0px 16px;
+}
+
+.gigi-layout__header-row > * {
+    margin: 0px 7px;
+    color: white;
+}
+
+.gigi__action--cancel {
+    background-color: #D64D4D !important;
+    color: #fff;
+}
+
+.gigi-button--shadowed:active,
+.gigi-button--shadowed:focus:not(:active),
+.gigi-button--shadowed:hover {
+    box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.14), 
+                0 4px 18px 4px rgba(0, 0, 0, 0.12), 
+                0 6px 4px -4px rgba(0, 0, 0, 0.4);
+}
+
+.full-width {
+    width: 100% !important;
+    position: relative;
+}
+
+.gigi-textfield__input {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.gigi-textfield__label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.gigi-dialog {
+    position: absolute;
+    flex-direction: column;
+    margin: auto;
+    max-height: 100%;
+    overflow: auto;
+    top: 0px;
+}
+
+.gigi-dialog__content {
+    flex: 1;
+}
+
+.gigi-toplayer {
+    z-index: 5;
+    overflow: auto;
+    
+}
+
+.gigi-backdrop {
+    display: flex;
+    position: absolute;
+    overflow: auto;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+}

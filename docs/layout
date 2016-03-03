@@ -1,0 +1,9 @@
+props:
+	title - text/component
+
+	content - list(text/component)
+
+	navmenu - gigi_navmenu()
+
+methods:
+	openNavMenu

@@ -1,0 +1,6 @@
+props:
+	large - (true/false)
+
+	position - (rigth/left/bottom/top)
+
+	content - component

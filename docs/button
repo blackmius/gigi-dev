@@ -1,0 +1,21 @@
+props: 
+    ripple - (true/false) Applies raised display effect
+    
+    raised - (true/false) Applies ripple click effect
+    
+    fab - (true/false) Applies fab (circular) display effect
+    
+    mini_fab - (true/false) Applies mini-fab (small fab circular) display effect
+    
+    isicon - (true/false) Applies icon (small plain circular) display effect
+    
+    colored - (true/false) Applies colored display effect (primary or accent 
+                            color, depending on the type of button)
+    
+    primary - (true/false) Applies primary color display effect
+    
+    ascent - (true/false) Applies accent color display effect
+    
+    content - text/component
+    
+    disabled - (true/false) 

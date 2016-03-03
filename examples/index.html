@@ -1,0 +1,130 @@
+<head>  
+    
+    <link rel="stylesheet" href="../components/material.css">
+    <link rel="stylesheet" href="../components/gigi.css">
+    <script src="../libs/cito.js"></script>
+    <script src="../components/material.js"></script>
+    <meta charset="utf8"> 
+    <link rel="stylesheet" href="../icons/font.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <script src="../components/gigi.js"></script>
+    <script src="../components/slider.js"></script>
+    <script src="../components/icon.js"></script>
+    <script src="../components/input.js"></script>
+    <script src="../components/list.js"></script>
+    <script src="../components/form.js"></script>
+    <script src="../components/menu.js"></script>
+    <script src="../components/dropdownmenu.js"></script>
+    <script src="../components/button.js"></script>
+    <script src="../components/card.js"></script>
+    <script src="../components/dialog.js"></script>
+    <script src="../components/navmenu.js"></script>
+    <script src="../components/tabs.js"></script>
+    <script src="../components/layout.js"></script>
+
+</head>
+<body>
+    
+</body>
+<script>
+
+        var make_card = function(t, d) {
+            return gigi_card({
+                title: t,
+                description: d,
+                bottom: [
+                    gigi_button({
+                        content: "AGIGI"
+                    }).node
+                ],
+                shadowheight: 3,
+                style: {
+                    main: {
+                        flex: "1"
+                    }
+                }
+            }).node
+        };
+
+        var items = [
+            make_card("HELLO", "WORLD")
+        ];
+        var dialogFormData = {};
+        var addItemDialog = gigi_dialog({
+            title: "Заполните поля",
+            content: gigi_form({
+                fields: {
+                    "name": "Название",
+                    "content": "Описание"
+                },
+                data: dialogFormData
+            }).node,
+            actions: gigi_button({
+                content: "HELLO",
+                attrs: {
+                    class: " gigi__action--continue"
+                },
+                shadowed: true,
+                events: {
+                    click: function() {
+                        addItemDialog.close();
+                        list.push(make_card(dialogFormData.name, dialogFormData.content))
+                    }
+                }
+            }).node,
+            backdrop: true
+        });
+        
+        var btn = gigi_button({
+            content: gigi_icon({icon: 'add'}).node,
+            isicon: true,
+            events: {
+                click: function() {
+                    navmenu.hide();
+                    addItemDialog.open();
+                }
+            },
+            ripple: true
+        });
+        
+        var card = gigi_card({
+            title: 'Get started', 
+            bottom: btn.node, 
+            description: 'asfasf',
+            shadowheight: 4
+        });
+        
+        var navmenu = gigi_navmenu({
+            title: 'default', content: [card.node]
+        });
+
+        var list = gigi_list({
+            items: items,
+            attrs: {
+                style: {
+                    width: "600px",
+                    "max-width": "95%",
+                    margin: "20px auto"
+                }    
+            }
+        });
+
+        var testElement = gigi_layout({title:"Разделы", toolbar: [btn.node],
+            content: list.node,
+            
+            navmenu: navmenu,
+            //onMenuBtnClick: navmenu.toggle,
+            //content: [navmenu.node, list.node]
+        })
+
+        var root = {
+            tag: 'div',
+            attrs: {class: "fit flexible"},
+            children: [testElement.node, addItemDialog.node]
+        }
+
+        cito.vdom.append(document.body, root);
+        
+    </script>

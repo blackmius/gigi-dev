@@ -1,0 +1,7 @@
+props:
+    single_color - (true/false) only 1 color
+    
+methods:
+    start
+    
+    stop

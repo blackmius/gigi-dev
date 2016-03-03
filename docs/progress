@@ -1,0 +1,7 @@
+props:
+    indeterminate - (true/false)
+
+methods:
+    setProgress(value)
+    
+    setBuffering(value)

@@ -1,0 +1,7 @@
+props:
+	data - {
+		message - text/component,
+		actionHandler - function(event) {},
+		actionText - 'Undo',
+		timeout - mls
+	}
