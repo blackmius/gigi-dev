@@ -1,4 +1,0 @@
-props:
-    panels - {title: component ... }
-    
-    ripple - (true/false)
