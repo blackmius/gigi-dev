@@ -24,7 +24,7 @@ var applyProps = function(el, props) {
         if(typeof st == "string") return st;
         var ret = "";
         for(var i in st) {if(!st.hasOwnProperty(i)) continue;
-            ret += i + ":" + st[i] + ";";
+            ret += i + ":" + fval(st[i]) + ";";
         }
         return ret;
     }
@@ -87,6 +87,7 @@ var gi = function(blablabla) {
     var self = function() {
         var chlds = computeFragments(Array.prototype.slice.call(args, 1));
         if(newel) return newel(chlds);
+        el = fval(el);
         var ret = {
             events: {},
             attrs: {},
@@ -97,7 +98,9 @@ var gi = function(blablabla) {
         var tgclass = (el.is.match(/\.[\w-_&\$+\d]*\b/g) || [""]).join("").replace(/\./g, " ").trim();
         
         if(!el.id && tgid) el.id = tgid;
-        if(el["class"] && tgclass) el["class"] = tgclass + " " + fval(el["class"]);
+        if(el["class"] && tgclass) { 
+            var c = el["class"]; el["class"] = function() {return tgclass + " " + fval(c); };
+        }
         else if(!el["class"] && tgclass) el["class"] = tgclass;
         el.tag = (el.is.match(/[-_&$]|\w+|\d*[#|\.|\D*]/) || [""])[0].replace(/[#|\.|\s*]/, '') || "div";
         applyProps(ret, el);
@@ -116,9 +119,7 @@ var gi = function(blablabla) {
         return applyProps(fval(el.is), el)
     };
     
-    if(el.$changes) {
-        self = applyChanges(self, el.$changes);
-    }
+    if(el.$changes) { self = applyChanges(self, el.$changes); }
     
     return self;
 };
@@ -139,10 +140,11 @@ val.prototype = {
     toString: function() {return String(this.get())}
 };
 
-return {
-    gi: gi,
-    val: function(v, type) {return new val(v, type)},
-    vdom: cito.vdom
-}
+gi.ready = function(fn) { document.addEventListener("DOMContentLoaded", fn); };
+gi.vdom = cito.vdom;
+gi.val = function(v, type) {return new val(v, type)};
+
+return gi;
 
 }());
+
