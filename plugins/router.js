@@ -11,13 +11,13 @@ gi.route = (function() {
             q[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
         }; return q;
     };
-    window.onhashchange = function(e) {
-        var old = getHash(e.oldURL),
-            _new = getHash(e.newURL).split("?"),
-            curr_route = routes[_new[0]];
+    var handler = function(old, newURL, e) {
+        _new = newURL.split("?");
+        var curr_route = routes[_new[0]];
         if(curr_route) { curr_route(getQuery(_new[1]), old) }
-        else { e.hash = getHash(e.newURL); for(var i = 0; i < notFoundEvts.length; i++) notFoundEvts[i](e); }
+        else { e.hash = getHash(newURL); for(var i = 0; i < notFoundEvts.length; i++) notFoundEvts[i](e); }
     };
+    window.onhashchange = function(e) { handler(getHash(e.oldURL), getHash(e.newURL), e); };
     var self = function(s, fn) { routes[s] = fn; };
     self.navigate = function(path, params) {
         var s = []
@@ -25,5 +25,11 @@ gi.route = (function() {
         document.location.hash = path + (s.length > 0? "?": "") + s.join("&");
     };
     self.notFound = function(evt) { notFoundEvts.push(evt); };
+    
+    self.onload = function() {
+        var initialHash = getHash(document.location.href);
+        handler(initialHash, initialHash, {});
+    };
+    
     return self;
 })();
