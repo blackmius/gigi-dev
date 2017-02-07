@@ -15,5 +15,6 @@ gi.app = function(name) {
 		showPage: function(name) { self.page = name; self.update(); }, content: body
 	};
 	var bodyDom = gi.vdom.append(document.body, body);
+	gi.ready(self.update);
 	return self;
 };
