@@ -1,4 +1,4 @@
-var Gi = (function() {
+var gi = (function() {
 var emptyFn = function() {};
 
 var fval = function(el) {
