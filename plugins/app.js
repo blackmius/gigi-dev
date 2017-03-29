@@ -1,6 +1,6 @@
 gi.app = function(app) {
 	var container = app.container || document.body;
-	var body = function() { app.body(app.vars); };
+	var body = function() { return app.body(app.vars); };
 	
 	var self = {
 		update: function() { gi.vdom.update(bodyDom, body); },
