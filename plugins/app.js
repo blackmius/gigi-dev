@@ -4,7 +4,7 @@ gi.app = function(app) {
 	var bodyDom;
 	var self = {
 		update: function() { gi.vdom.update(bodyDom, body); },
-		pages: [], page: null, vars: app.vars,
+		pages: [], page: null, vars: app.vars, actions: app.actions,
 		init: function() {
 	        bodyDom = gi.vdom.append(container, body);
 	        gi.ready(self.update);
