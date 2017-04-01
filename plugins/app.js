@@ -1,6 +1,6 @@
 gi.app = function(app) {
 	var container = app.container; if(!container) throw Error("App must have a container property")
-	var body = function() { return app.body(app.vars); },
+	var body = app.body,
 	    bodyDom,
 	    domUpdate = function() { gi.vdom.update(bodyDom, body); console.log("update"); };
 	
@@ -22,9 +22,9 @@ gi.app = function(app) {
 		    if(!updated) { updated = true; domUpdate(); }
 		    else { updateNeeded = true; }
 	    },
-		vars: app.vars, actions: app.actions,
 		init: function() {
 	        bodyDom = gi.vdom.append(container, body); loop();
+	        gi.addUpdateHandler(self.update);
         }
 	};
 	return self;

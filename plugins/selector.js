@@ -1,7 +1,8 @@
-gi.selector = function(list, _selected) {
+gi.selector = function(list, selected) {
     var self = {
-        select: function(name) { _selected = name },
-        get value() { return list[_selected]; }
+        selected: selected,
+        select: function(name) { self.selected = name },
+        get value() { return list[self.selected]; }
     };
     return self;
 };
