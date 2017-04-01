@@ -1460,6 +1460,13 @@ gi.ready = function(fn) { document.addEventListener("DOMContentLoaded", fn); };
 gi.vdom = cito.vdom;
 gi.val = function(v, type) {return new val(v, type)};
 
+
+var updateHandlers = [];
+gi.addUpdateHandler = function(h) { updateHandlers.push(h); }
+gi.update = function() {
+    for(var i = 0; i < updateHandlers.length; i++) updateHandlers[i]();
+};
+
 return gi;
 
 }());
