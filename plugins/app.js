@@ -1,13 +1,30 @@
 gi.app = function(app) {
-	var container = app.container || document.body;
-	var body = function() { return app.body(app.vars); };
-	var bodyDom;
+	var container = app.container; if(!container) throw Error("App must have a container property")
+	var body = function() { return app.body(app.vars); },
+	    bodyDom,
+	    domUpdate = function() { gi.vdom.update(bodyDom, body); console.log("update"); };
+	
+	var delay = Math.floor(1000 / (app.fps || 45)),
+	    updateNeeded = false,
+	    updated = false;
+	var loop = function() {
+    	if(updateNeeded && !updated) {
+    	    updateNeeded = false; updated = true;
+    	    domUpdate();
+    	}
+    	else updated = false;
+    	
+	    setTimeout(loop, delay);
+	};
+	
 	var self = {
-		update: function() { gi.vdom.update(bodyDom, body); },
-		pages: [], page: null, vars: app.vars, actions: app.actions,
+		update: function() {
+		    if(!updated) { updated = true; domUpdate(); }
+		    else { updateNeeded = true; }
+	    },
+		vars: app.vars, actions: app.actions,
 		init: function() {
-	        bodyDom = gi.vdom.append(container, body);
-	        gi.ready(self.update);
+	        bodyDom = gi.vdom.append(container, body); loop();
         }
 	};
 	return self;
