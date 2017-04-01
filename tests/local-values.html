@@ -4,17 +4,17 @@
 <body></body>
 <script src="../gigi/stable.js"></script>
 <script src="../plugins/app.js"></script>
+<script src="../plugins/localProps.js"></script>
 
 <script src="../components/input/input.js"></script>
 <script>
-    var Val = gi.val;
+    var Local = gi.localProp; //USAGE: Local(name, type, defaultValue)
     
-    var value = Val("");
-    var someInput = input("This is input", value, {animated: true});
-    var element1 = () => gi("", "Element #1. value: ", value.get());
-    var element2 = () => gi("", "Element #2. value: ", value.get());
+    var LOCAL_VALUE = Local("property", String, "default_value");
     
-    var body = gi([someInput, element1, element2]);
+    var someInput = input("Input here", LOCAL_VALUE);
+    var description = gi("<", "Fill the input and then reload the page.<br>The value is stored in <b>localstorage</b>.property")
+    var body = gi([someInput, description])
     
     //create the application
     var myApp = gi.app({

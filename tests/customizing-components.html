@@ -1,0 +1,32 @@
+<style>
+    .my-component { background: lightgrey; padding: 0.75em 1em; margin: 1em; }
+</style>
+<body></body>
+<script src="../gigi/stable.js"></script>
+<script src="../plugins/app.js"></script>
+<script>    
+    //create the component
+    function myComponent(labelTEXT, contentTEXT, changes = {}) {
+        return gi(".my-component",
+            gi({is: "b.label", $changes: changes.label}, labelTEXT),
+            gi({is: ".content", $changes: changes.content}, contentTEXT));
+    };
+    
+    var style1 = {label: {style: "font-size: 24pt"}, content: {style: "color: red"}};
+    var style2 = {content: {style: "border: 1px solid"}};
+    
+    var body = gi([
+        myComponent("Default", "This is a default component!"),
+        myComponent("Customized1", "This one is colored in red and have a big title", style1),
+        myComponent("Customized2", "This one have border", style2),
+    ]);
+    
+    //create the application
+    var myApp = gi.app({
+        container: document.body,
+        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
+        body: body
+    });
+    //init it
+    myApp.init();
+</script>

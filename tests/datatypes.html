@@ -1,20 +1,30 @@
 <head>
     <link rel="stylesheet" href="../components/input/input.css">
 </head>
+<style>
+    .my-input { background: lightgrey; padding: 0.75em 1em; margin: 1em; }
+</style>
 <body></body>
 <script src="../gigi/stable.js"></script>
 <script src="../plugins/app.js"></script>
 
 <script src="../components/input/input.js"></script>
 <script>
-    var Val = gi.val;
-    
-    var value = Val("");
-    var someInput = input("This is input", value, {animated: true});
-    var element1 = () => gi("", "Element #1. value: ", value.get());
-    var element2 = () => gi("", "Element #2. value: ", value.get());
-    
-    var body = gi([someInput, element1, element2]);
+
+    var Val = gi.val; //USAGE: Val(value, type)
+
+    var myInput = function(labelTEXT, value) {
+        return gi(".my-input",
+            input(labelTEXT, value, {animated: true})
+        );
+    };
+
+    var upperCase = (v) => v.toUpperCase();
+
+    var body = gi([
+        myInput("Default input", Val("")),
+        myInput("Only UPPERCASE input", Val("", upperCase)),
+    ]);
     
     //create the application
     var myApp = gi.app({
