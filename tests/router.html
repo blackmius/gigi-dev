@@ -1,0 +1,42 @@
+<style>
+    .my-component { background: lightgrey; padding: 0.75em 1em; margin: 1em; }
+</style>
+<body></body>
+<script src="../gigi/stable.js"></script>
+<script src="../plugins/app.js"></script>
+<script src="../plugins/router.js"></script>
+
+<script src="../components/input/input.js"></script>
+<script>
+    var Val = gi.val;
+    
+    var v1 = Val("Agigi");
+    var v2 = Val("Agigovich");
+    
+    var btn = (c, cb) => gi({is: "button", href: "#", onclick: cb}, c);
+    
+    function changeParams() {
+        gi.route.navigate("test", {name: v1.get(), surname: v2.get()})
+    }
+    
+    
+    var body = gi([
+        input("NAME",    v1, {animated: true}),
+        input("SURNAME", v2, {animated: true}),
+        
+        btn("click me", changeParams)
+    ]);
+    
+    gi.route("test", (p) => console.log("PARAMS: ", p))
+     
+    //create the application
+    var myApp = gi.app({
+        container: document.body,
+        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
+        body: body
+    });
+    
+    //init it
+    gi.route.onload();
+    myApp.init();
+</script>

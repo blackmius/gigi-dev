@@ -24,7 +24,6 @@ function input(label, value, props) {
                     readonly: props.readonly || props.disabled || false,
                     on$created: function(e) {
                         inputDOM = e.target;
-                        console.log(e);
                         if(props.focused) setTimeout(()=>e.target.focus(), 100);
                     },
                     onfocus: function(e) {
