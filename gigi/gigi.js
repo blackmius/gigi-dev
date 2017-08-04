@@ -131,17 +131,14 @@ var val = function(v, type) {
 };
 val.prototype = {
     type: function(v) {return v},
-    get: function() {
-        return this.type(this.value);
-    },
-    set: function(v) {
-        this.value = v;
-    },
+    get: function() { return this.type(this.value); },
+    set: function(v) { this.value = v; },
     toString: function() {return String(this.get())}
 };
 
 gi.ready = function(fn) { document.addEventListener("DOMContentLoaded", fn); };
 gi.vdom = cito.vdom;
+gi.fval = fval;
 gi.val = function(v, type) {return new val(v, type)};
 
 
