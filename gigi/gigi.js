@@ -124,14 +124,14 @@ var gi = function(blablabla) {
     return self;
 };
 
-var val = function(v, type) {
-    if(type) this.type = type;
+var val = function(v, _get, _set) {
+    if(_get) this.get = _get;
+    if(_set) this.set = _set;
     this.value = v;
     return this;
 };
 val.prototype = {
-    type: function(v) {return v},
-    get: function() { return this.type(this.value); },
+    get: function() { return this.value; },
     set: function(v) { this.value = v; },
     toString: function() {return String(this.get())}
 };
@@ -139,7 +139,13 @@ val.prototype = {
 gi.ready = function(fn) { document.addEventListener("DOMContentLoaded", fn); };
 gi.vdom = cito.vdom;
 gi.fval = fval;
-gi.val = function(v, type) {return new val(v, type)};
+gi.ref = function(obj, prop) {
+    return new val(obj[prop],
+        function() { return obj[prop] },
+        function(v) { return obj[prop] = v}
+    );
+};
+gi.val = function(v) { return new val(v) };
 
 
 var updateHandlers = [];
