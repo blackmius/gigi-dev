@@ -1,10 +1,10 @@
-gi.app = function(app) {
-	var container = app.container; if(!container) throw Error("App must have a container property")
-	var body = app.body,
+gi.view = function(view) {
+	var container = view.container; if(!container) throw Error("View must have a container property")
+	var body = view.body,
 	    bodyDom,
 	    domUpdate = function() { gi.vdom.update(bodyDom, body); console.log("update"); };
 	
-	var delay = Math.floor(1000 / (app.fps || 45)),
+	var delay = Math.floor(1000 / (view.fps || 45)),
 	    updateNeeded = false,
 	    updated = false;
 	var loop = function() {

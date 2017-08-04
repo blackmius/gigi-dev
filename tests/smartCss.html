@@ -1,0 +1,41 @@
+<body></body>
+<script src="../gigi/stable.js"></script>
+<script src="../plugins/view.js"></script>
+<script src="../plugins/css.js"></script>
+
+
+<script src="../components/input/input.js"></script>
+<script>
+
+    var btn = (c, cb) => gi({is: "button", onclick: cb}, c);
+    
+    var props = {
+        color: "#f20f3f",
+        defaultPadding: "padding: 4px 12px 4px 12px"
+    }
+
+    var buttonCss = gi.css(props, (p) => `
+	    button {
+	        color: ${p.color};
+	        ${p.defaultPadding};
+        }
+    `)
+    
+    var body = gi([
+        btn("hello"),
+        gi('br'), gi('br'),
+        input("color", gi.ref(props, "color")),
+        gi('br'),
+        btn(() => buttonCss.enabled? "disable css": "enable css",
+            () => { buttonCss.enabled = !buttonCss.enabled; gi.update(); })
+    ]);
+    
+    var myApp = gi.view({
+        container: document.body,
+        body: body
+    });
+
+
+    myApp.init();
+</script>
+
