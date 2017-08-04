@@ -3,7 +3,7 @@
 </head>
 <body></body>
 <script src="../gigi/stable.js"></script>
-<script src="../plugins/app.js"></script>
+<script src="../plugins/view.js"></script>
 
 <script src="../components/input/input.js"></script>
 <script>
@@ -16,12 +16,11 @@
     
     var body = gi([someInput, element1, element2]);
     
-    //create the application
-    var myApp = gi.app({
+
+    var myApp = gi.view({
         container: document.body,
-        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
         body: body
     });
-    //init it
+
     myApp.init();
 </script>

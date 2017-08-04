@@ -3,7 +3,7 @@
 </style>
 <body></body>
 <script src="../gigi/stable.js"></script>
-<script src="../plugins/app.js"></script>
+<script src="../plugins/view.js"></script>
 <script>    
     //create the component
     function myComponent(labelTEXT, contentTEXT, changes = {}) {
@@ -21,12 +21,10 @@
         myComponent("Customized2", "This one have border", style2),
     ]);
     
-    //create the application
-    var myApp = gi.app({
+    var myApp = gi.view({
         container: document.body,
-        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
         body: body
     });
-    //init it
+
     myApp.init();
 </script>

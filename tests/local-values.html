@@ -3,7 +3,7 @@
 </head>
 <body></body>
 <script src="../gigi/stable.js"></script>
-<script src="../plugins/app.js"></script>
+<script src="../plugins/view.js"></script>
 <script src="../plugins/localProps.js"></script>
 
 <script src="../components/input/input.js"></script>
@@ -15,13 +15,11 @@
     var someInput = input("Input here", LOCAL_VALUE);
     var description = gi("<", "Fill the input and then reload the page.<br>The value is stored in <b>localstorage</b>.property")
     var body = gi([someInput, description])
-    
-    //create the application
-    var myApp = gi.app({
+
+    var myApp = gi.view({
         container: document.body,
-        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
         body: body
     });
-    //init it
+
     myApp.init();
 </script>

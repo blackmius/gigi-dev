@@ -3,7 +3,7 @@
 </style>
 <body></body>
 <script src="../gigi/stable.js"></script>
-<script src="../plugins/app.js"></script>
+<script src="../plugins/view.js"></script>
 <script src="../plugins/router.js"></script>
 
 <script src="../components/input/input.js"></script>
@@ -16,7 +16,7 @@
     var btn = (c, cb) => gi({is: "button", href: "#", onclick: cb}, c);
     
     function changeParams() {
-        gi.route.navigate("test", {name: v1.get(), surname: v2.get()})
+        gi.router.navigate("test", {name: v1.get(), surname: v2.get()})
     }
     
     
@@ -27,16 +27,14 @@
         btn("click me", changeParams)
     ]);
     
-    gi.route("test", (p) => console.log("PARAMS: ", p))
+    gi.router.listen("test", (p) => console.log("PARAMS: ", p))
      
-    //create the application
-    var myApp = gi.app({
+    var myApp = gi.view({
         container: document.body,
-        fps: 30, //do not update the app more than 30 times per second; this is ANTI-LAG
+        fps: 30,
         body: body
     });
     
-    //init it
-    gi.route.onload();
+    gi.router.onload();
     myApp.init();
 </script>
