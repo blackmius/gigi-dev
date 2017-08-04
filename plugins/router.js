@@ -1,4 +1,4 @@
-gi.router = (function() {
+gi.route = (function() {
     var routes = {}, notFoundEvts = [];
     var getHash = function(url) {
         var i = url.indexOf("#");
@@ -18,20 +18,18 @@ gi.router = (function() {
         else { e.hash = getHash(newURL); for(var i = 0; i < notFoundEvts.length; i++) notFoundEvts[i](e); }
     };
     window.onhashchange = function(e) { handler(getHash(e.oldURL), getHash(e.newURL), e); };
-    var self = {
-        listen: function(s, fn) { routes[s] = fn; },
-        navigate: function(path, params) {
-            var s = []
-            for(var i in params) if(params.hasOwnProperty(i)) s.push(i + "=" + encodeURIComponent(params[i]))
-            document.location.hash = path + (s.length > 0? "?": "") + s.join("&");
-        },
-        notFound: function(evt) { notFoundEvts.push(evt); },
-        
-        onload: function() {
-            var initialHash = getHash(document.location.href);
-            handler(initialHash, initialHash, {});
-        }
-    }
+    var self = function(s, fn) { routes[s] = fn; };
+    self.navigate = function(path, params) {
+        var s = []
+        for(var i in params) if(params.hasOwnProperty(i)) s.push(i + "=" + encodeURIComponent(params[i]))
+        document.location.hash = path + (s.length > 0? "?": "") + s.join("&");
+    };
+    self.notFound = function(evt) { notFoundEvts.push(evt); };
+    
+    self.onload = function() {
+        var initialHash = getHash(document.location.href);
+        handler(initialHash, initialHash, {});
+    };
     
     return self;
 })();

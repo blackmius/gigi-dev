@@ -1,5 +1,5 @@
 gi.view = function(view) {
-	var container = view.container; if(!container) throw Error("App must have a container property")
+	var container = view.container; if(!container) throw Error("View must have a container property")
 	var body = view.body,
 	    bodyDom,
 	    domUpdate = function() { gi.vdom.update(bodyDom, body); console.log("update"); };
