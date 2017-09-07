@@ -1,160 +1,79 @@
-var gi = (function() {
-var emptyFn = function() {};
-
-var fval = function(el) {
-    while(typeof el == "function") el = el();
-    return el;
-};
-
-var applyProps = function(el, props) {
-    var concatElems = function(l1, l2) {
-        var norm = function(el) {return (el instanceof Array)? el: [el]}
-        return (l1 === undefined)
-            ?((l2 === undefined)? []      : norm(l2))
-            :((l2 === undefined)? norm(l1): norm(l1).concat(norm(l2)))
-    };
-    var getUnique = function(arr) {
-        var o = {}, a = [], i, e;
-        for (i = 0; e = arr[i]; i++) {o[e] = 1};
-        for (e in o) {a.push (e)};
-        return a;
+((root, factory) => {
+    if (typeof define === 'function' && define.amd) define(['./cito'], factory)
+    else if (typeof module === 'object' && module.exports) module.exports = factory(root.cito)
+    else root.gi = factory(root.cito)
+})(this, (cito) => {
+    const fval = (v) => { while(typeof v == "function") v = v(); return v }
+    const parseChild = (el) => {
+        if(Array.isArray(el)) return {children: el.map(parseChild), events: {}, attrs: {}}
+        if(typeof el == "function") return parseChild(fval(el))
+        return (typeof el == "object")? el: String(el)
     }
-    var computeStyle = function(st) {
-        if(st === undefined) return "";
-        if(typeof st == "string") return st;
-        var ret = "";
-        for(var i in st) {if(!st.hasOwnProperty(i)) continue;
-            ret += i + ":" + fval(st[i]) + ";";
-        }
-        return ret;
+    const parseGi = ({is='', ...props}, childs=[]) => {
+        const idPatt = /#([^\s#.]+)/gi,
+              classPatt = /\.([^\s#.]+)/gi,
+              tagPatt = /^([^\s#.]+?)([.#]|$)/gi;          
+        is = fval(is)
+        let id = (idPatt.exec(is) || [])[1] || "",
+            tag = (tagPatt.exec(is) || [])[1] || "div",
+            classes = [], attrs = {}, events = {};
+        { let m; while(m = classPatt.exec(is)) classes.push(m[1].trim()) }      
+        let result = { tag: tag, attrs: attrs, events: events, children: childs.map(parseChild) }
+        Object.entries(props).forEach(([key, val]) => {
+            if(key.slice(0, 2) == "on") events[key.slice(2)] = Array.isArray(val)? val: [val]
+            else {
+                let vval = fval(val)
+                if(key == "$key") result[key] = vval
+                else if(vval != undefined && key != "$changes") attrs[key] = vval
+            }
+        })
+        if(classes.length > 0) attrs["class"] = classes.concat((attrs["class"] || "").split(' ')).join(' ').trim()
+        if(id.length > 0) attrs.id = id
+        return result
     }
     
-    if(!el.events) el.events = {};
-    if(!el.attrs) el.attrs = {};
-    for(var i in props) { if(!props.hasOwnProperty(i) || i == "is" || i == "$changes") continue;
-        if(i == "class") {
-            var cl = fval(props[i]).replace(/\./g, " ").trim();
-            if(el.attrs["class"]) el.attrs["class"] += " " + cl;
-            else el.attrs["class"] = cl;
-        } else if(i == "id") {
-            el.attrs.id = fval(props.id)
-        } else if(i == "tag" || i == "key") {
-            el[i] = fval(props[i]);
-        } else if(i == "children") {
-            el.children = concatElems(el.children, props[i]);
-        } else if(i.slice(0, 2) == "on") {
-            el.events[i.slice(2)] = concatElems(el.events[i.slice(2)], props[i]);
-        } else if(i == "style") {
-            el.attrs.style = computeStyle(el.attrs.style) + computeStyle(fval(props.style));
-        } else {
-            el.attrs[i] = fval(props[i]);
-        }
-    };
-    if(!el.attrs.id) delete el.attrs.id;
-    if(el.attrs.class) {
-        el.attrs.class = el.attrs.class.replace(/^\s+/, "").replace(/\s+$/, "");
-        el.attrs.class = getUnique(el.attrs.class.split(" ")).join(" ");
+    const styleToString = (s) => (typeof s == "string"? s: (s == undefined? "":
+        Object.entries(s).map(([key, val]) => `${key}:${fval(val)};`)).join(""))
+    const modifyGi = (el1, el2) => {
+        const uniqueWords = /(\w+\b)(?!.*\1\b)/gi
+        el1.children = el1.children.concat(el2.children)
+        Object.entries(el2.events).forEach(([key, list]) => el1.events[key] = (el1.events[key] || []).concat(list))
+        if(el2.attrs["class"])
+            el1.attrs["class"] = ((el1.attrs["class"] || "") + " " + el2.attrs["class"]).match(uniqueWords).join(" ")
+        el1.attrs.style = styleToString(el1.attrs.style || {}) + styleToString(el2.attrs.style || {})
+        if(el2.attrs.id) el1.attrs.id = el2.attrs.id
+        Object.entries(el2.attrs).forEach(([key, val]) => {
+            if(key != "style" && key != "class" && key != "id") el1.attrs[key] = val})
+        return el1
     }
-    if(!el.attrs.class) delete el.attrs.class;
-    return el;
-};
-
-var applyChanges = function(el, changes) {
-    if(!changes) return el;
-    var childs = changes.childs || [];
-    delete changes.childs;
-    changes.is = el;
-    return gi(changes, childs);
-};
-var computeFragments = function(arr) {
-    var chlds = [];
-    for(var i = 0; i < arr.length; i++) {
-        var el = arr[i];
-        if(el instanceof Array) chlds = chlds.concat(computeFragments(el));
-        else if(typeof el != "function") {
-            chlds.push(String(el));
-        }
-        else {chlds.push(el)};
-    };
-    return chlds;
-};
-
-var gi = function(blablabla) {
-    var args = arguments;
-    var el = args[0];
-    var newel;
-
-    var self = function() {
-        var chlds = computeFragments(Array.prototype.slice.call(args, 1));
-        if(newel) return newel(chlds);
-        el = fval(el);
-        var ret = {
-            events: {},
-            attrs: {},
-            children: chlds
-        };
-        
-        var tgid = (el.is.match(/#[\w-_&\$+\d]*\b/g) || [""])[0].slice(1);
-        var tgclass = (el.is.match(/\.[\w-_&\$+\d]*\b/g) || [""]).join("").replace(/\./g, " ").trim();
-        
-        if(!el.id && tgid) el.id = tgid;
-        if(el["class"] && tgclass) { 
-            var c = el["class"]; el["class"] = function() {return tgclass + " " + fval(c); };
-        }
-        else if(!el["class"] && tgclass) el["class"] = tgclass;
-        el.tag = (el.is.match(/[-_&$]|\w+|\d*[#|\.|\D*]/) || [""])[0].replace(/[#|\.|\s*]/, '') || "div";
-        applyProps(ret, el);
-        return ret;
-    };
     
-    if(el instanceof Array) newel = function(chlds) {
-        return {children: computeFragments(el).concat(chlds)}
-    };
-    else if(el == "<" && el == "!") newel = function(chlds) {
-        return {tag: el, children: chlds}
-    };
-    else if(typeof el == "string" || typeof el == "function") el = {is: el};
-    if(typeof el.is == "function")  newel = function(chlds) {
-        el.children = chlds;
-        return applyProps(fval(el.is), el)
-    };
+    const gi = (elem, ...childs) => () => {
+        let result
+        if(typeof elem == "string") return parseGi({is: elem}, childs)
+        else if(Array.isArray(elem)) return { children: elem.concat(childs).map(parseChild) }
+        else if(typeof elem.is == "function") result = modifyGi(fval(elem.is), parseGi(elem, childs))
+        else result = parseGi(elem, childs)
+        if(elem.$changes) result = modifyGi(result, parseGi(elem.$changes))
+        return result
+    }
     
-    if(el.$changes) { self = applyChanges(self, el.$changes); }
+    const Val = (v) => ({ get: () => v, set: (vv) => v = vv })
+    const Ref = (obj, prop) => ({
+        get: () => obj[prop], 
+        set: (vv) => obj[prop] = vv
+    })
     
-    return self;
-};
-
-var val = function(v, _get, _set) {
-    if(_get) this.get = _get;
-    if(_set) this.set = _set;
-    this.value = v;
-    return this;
-};
-val.prototype = {
-    get: function() { return this.value; },
-    set: function(v) { this.value = v; },
-    toString: function() {return String(this.get())}
-};
-
-gi.ready = function(fn) { document.addEventListener("DOMContentLoaded", fn); };
-gi.vdom = cito.vdom;
-gi.fval = fval;
-gi.ref = function(obj, prop) {
-    return new val(obj[prop],
-        function() { return obj[prop] },
-        function(v) { return obj[prop] = v}
-    );
-};
-gi.val = function(v) { return new val(v) };
-
-
-var updateHandlers = [];
-gi.addUpdateHandler = function(h) { updateHandlers.push(h); }
-gi.update = function() {
-    for(var i = 0; i < updateHandlers.length; i++) updateHandlers[i]();
-};
-
-return gi;
-
-}());
-
+    const view = (container, content) => {
+        let parsed = () => parseChild(content)
+        let vdom,
+            update = () => cito.vdom.update(vdom, parsed),
+            init = () => { vdom = cito.vdom.append(container, parsed); return self }
+            self = { update, container, content, init }
+        gi.onUpdate(update)
+        return self
+    }
+    let updateHandlers = []
+    const update = () => updateHandlers.forEach((v) => v())
+    const onUpdate = (h) => updateHandlers.push(h)
+    return Object.assign(gi, { Val, Ref, view, update, onUpdate, updateHandlers })
+})
